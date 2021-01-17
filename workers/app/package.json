@@ -2,8 +2,10 @@
   "name": "strivia",
   "version": "1.0.0",
   "description": "Strivia is a remote sandbox code execution engine for evaluation of untrusted code.",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
+    "start": "set NODE_ENV=prod&&tsc&&node ./dist/app.js",
+    "devStart": "set NODE_ENV=dev&&tsc&&node ./dist/app.js"
   },
   "repository": {
     "type": "git",
@@ -15,15 +17,9 @@
     "url": "https://github.com/Infotition/strivia/issues"
   },
   "homepage": "https://github.com/Infotition/strivia#readme",
-  "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^4.13.0",
-    "@typescript-eslint/parser": "^4.13.0",
-    "eslint": "^7.18.0",
-    "eslint-config-airbnb-base": "^14.2.1",
-    "eslint-config-prettier": "^7.1.0",
-    "eslint-plugin-import": "^2.22.1",
-    "eslint-plugin-prettier": "^3.3.1",
-    "prettier": "^2.2.1",
+  "dependencies": {
+    "@types/node": "^14.14.21",
     "typescript": "^4.1.3"
-  }
+  },
+  "devDependencies": {}
 }
