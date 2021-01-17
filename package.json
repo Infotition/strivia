@@ -1,0 +1,18 @@
+{
+  "name": "strivia",
+  "version": "1.0.0",
+  "description": "Strivia is a remote sandbox code execution engine for evaluation of untrusted code.",
+  "main": "index.js",
+  "scripts": {
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Infotition/strivia.git"
+  },
+  "author": "Infotition",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/Infotition/strivia/issues"
+  },
+  "homepage": "https://github.com/Infotition/strivia#readme"
+}
