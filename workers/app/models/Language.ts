@@ -7,6 +7,7 @@
 export default interface Language {
   name: string;
   aliases: Array<string>;
+  extension: string;
   timeout: number;
   compiled: boolean;
   compileCmd: string;

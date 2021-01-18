@@ -4,14 +4,16 @@ const languages: Language[] = [
   {
     name: 'python3',
     aliases: ['py', 'py3', 'python', 'python3'],
+    extension: 'py',
     timeout: 3,
     compiled: false,
-    compileCmd: '',
-    runCmd: 'python3'
+    compileCmd: '-',
+    runCmd: 'python'
   },
   {
     name: 'java',
     aliases: ['java'],
+    extension: 'java',
     timeout: 5,
     compiled: true,
     compileCmd: 'javac',

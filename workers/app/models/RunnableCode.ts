@@ -5,6 +5,7 @@
  * @interface RunnableCode
  */
 export default interface RunnableCode {
+  uuid?: number;
   lang: string;
   code: string;
   stdin: string;
