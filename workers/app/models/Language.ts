@@ -11,6 +11,8 @@ export default interface Language {
   timeout: number;
   compiled: boolean;
   compileCmd: string;
+  runFile: string;
+  outputFile: string;
   runCmd: string;
   version?: string;
 }

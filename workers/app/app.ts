@@ -15,7 +15,7 @@ const rimraf = require('rimraf');
  * @param {(Language)} lang
  * @param {Function} callback
  */
-function createFile(
+function createDirectory(
   data: RunnableCode,
   lang: Language,
   callback: Function
@@ -55,18 +55,35 @@ function runCode(data: RunnableCode): void {
   const language = languageNameFromAlias(data.lang);
   if (!language) throw new Error('Supply a language field.');
 
-  createFile(data, language, (source: string) => {
-    const args = `${source} ${language.name} ${language.timeout} ${language.compiled} ${language.compileCmd} ${language.runCmd}`;
-    const command = `python run.py ${args}`;
+  // Create a directory for the submission where the code can be compiled and runned
+  createDirectory(data, language, (source: string) => {
+    // Prepare the command for the python executer program (with console args)
+    const args = `${source} ${language.name} ${language.timeout} ${language.compiled} ${language.compileCmd} ${language.runCmd} ${language.runFile} ${language.outputFile}`;
+    const command = `python execute.py ${args}`;
 
-    exec(command, (err: Error, stout: string, sterr: string) => {
+    // Execute the python script, which compiles/runs the code
+    exec(command, (err: Error, stdout: string, stderr: string) => {
       if (err) throw err;
-      console.log(stout);
-      console.log(sterr);
 
+      // Read the output, the program generated and save it
+      fs.readFile(
+        `./temp/${data.uuid}/output.txt`,
+        'utf8',
+        (readError: Error, content: string) => {
+          if (readError) throw readError;
+          const result = {
+            output: content,
+            stderr,
+            status: stdout,
+            submission_id: data.uuid
+          };
+          console.log(result);
+        }
+      );
+
+      // Save delete the temp directory for the submission
       rimraf(`./temp/${data.uuid}`, (deleteErr: Error) => {
         if (deleteErr) throw deleteErr;
-        else console.log('DELETED TEMP FOLDER');
       });
     });
   });
@@ -74,8 +91,23 @@ function runCode(data: RunnableCode): void {
 
 runCode({
   lang: 'py3',
-  code: 'print("Hello World")',
-  stdin: 'test',
+  code: `name = input()\nprint("Hello %s!" % name)\n`,
+  stdin: 'Strivia',
+  args: [],
+  uuid: v4()
+});
+
+runCode({
+  lang: 'java',
+  code: `
+  import java.util.Scanner;
+  class Main {
+    public static void main(String[] args) {
+      Scanner scanner = new Scanner(System.in);
+      System.out.println("Hello " + scanner.next() + "!");
+    }
+  }`,
+  stdin: 'Strivia',
   args: [],
   uuid: v4()
 });

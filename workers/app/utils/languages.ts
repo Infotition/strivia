@@ -8,7 +8,9 @@ const languages: Language[] = [
     timeout: 3,
     compiled: false,
     compileCmd: '-',
-    runCmd: 'python'
+    runFile: 'source.py',
+    runCmd: 'python',
+    outputFile: 'source.py'
   },
   {
     name: 'java',
@@ -17,7 +19,9 @@ const languages: Language[] = [
     timeout: 5,
     compiled: true,
     compileCmd: 'javac',
-    runCmd: 'java'
+    runFile: 'Main',
+    runCmd: 'java',
+    outputFile: 'main.class'
   }
 ];
 
