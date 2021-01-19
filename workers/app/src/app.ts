@@ -1,4 +1,4 @@
-import Language from 'models/Language';
+import Language from './models/Language';
 import RunnableCode from './models/RunnableCode';
 import checkInput from './utils/validator';
 import { languageNameFromAlias } from './utils/languages';
@@ -37,7 +37,7 @@ function createDirectory(
           data.code,
           (codeError: Error) => {
             if (codeError) throw codeError;
-            callback(`${folder}/source.${lang.extension}`);
+            callback();
           }
         );
       });
@@ -56,9 +56,9 @@ function runCode(data: RunnableCode): void {
   if (!language) throw new Error('Supply a language field.');
 
   // Create a directory for the submission where the code can be compiled and runned
-  createDirectory(data, language, (source: string) => {
+  createDirectory(data, language, () => {
     // Prepare the command for the python executer program (with console args)
-    const args = `${source} ${language.name} ${language.timeout} ${language.compiled} ${language.compileCmd} ${language.runCmd} ${language.runFile} ${language.outputFile}`;
+    const args = `./temp/${data.uuid}/source.${language.extension} ${language.name} ${language.timeout} ${language.compiled} ${language.compileCmd} ${language.runCmd} ${language.runFile} ${language.outputFile}`;
     const command = `python execute.py ${args}`;
 
     // Execute the python script, which compiles/runs the code
