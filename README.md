@@ -6,10 +6,7 @@
   <p>
     <a href="https://github.com/Infotition/infotition-discord-bot/blob/main/LICENSE"><img src="https://img.shields.io/github/license/Infotition/infotition-discord-bot" alt="Discord server" /></a> 
     <a href="https://david-dm.org/Infotition/strivia"><img src="https://status.david-dm.org/gh/Infotition/strivia.svg" alt="Dependencies" /></a>
-    <a href="https://www.patreon.com/infotition"><img src="https://img.shields.io/badge/donate-patreon-F96854" alt="Patreon"/></a>
-    <a href="https://www.buymeacoffee.com/infotition"><img src="https://img.shields.io/badge/donate-buymeacoffee-yellow" alt="Buymeacoffee"/></a>
     <a href="https://discord.gg/NpxrDGYDwV"><img src="https://img.shields.io/discord/792139920260464670?color=7289da&logo=discord&logoColor=white" alt="Discord server" /></a>
-    <a href="https://twitter.com/infotition"><img src="https://img.shields.io/twitter/follow/infotition?style=social" alt="Twitter account" /></a>
   </p>
 </div>
 
