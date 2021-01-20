@@ -7,7 +7,7 @@
     "start": "tsc&&cd ./src/dist&& node app.js",
     "devStart": "tsc&&node ./src/dist/app.js",
     "parse": "tsc --listFiles",
-    "test": "jest --passWithNoTests",
+    "test": "jest --passWithNoTests --detectOpenHandles",
     "coverage": "jest --coverage --passWithNoTests"
   },
   "repository": {

@@ -1,11 +1,16 @@
-import Language from './models/Language';
-import RunnableCode from './models/RunnableCode';
+// Function imports
 import checkInput from './utils/validator';
 import { languageNameFromAlias } from './utils/languages';
 
+// Models imports
+import Language from './models/Language';
+import RunnableCode from './models/RunnableCode';
+import Output from './models/Output';
+
+// Modules imports
 const { v4 } = require('uuid');
-const fs = require('fs');
 const { exec } = require('child_process');
+const fs = require('fs');
 const rimraf = require('rimraf');
 
 /**
@@ -20,23 +25,23 @@ function createDirectory(
   lang: Language,
   callback: Function
 ): void {
-  const folder = `./temp/${data.uuid}`;
+  const folder: string = `./temp/${data.uuid}`;
 
   // Create folder for request
-  fs.mkdir(folder, (folderError: Error) => {
-    if (folderError) throw folderError;
+  fs.mkdir(folder, (folderErr: Error) => {
+    if (folderErr) console.log(folderErr);
     // Create file for input
-    fs.writeFile(`${folder}/input.txt`, data.stdin, (inputError: Error) => {
-      if (inputError) throw inputError;
+    fs.writeFile(`${folder}/input.txt`, data.stdin, (inputErr: Error) => {
+      if (inputErr) console.log(inputErr);
       // Create file for the code output
-      fs.writeFile(`${folder}/output.txt`, '', (outputError: Error) => {
-        if (outputError) throw outputError;
+      fs.writeFile(`${folder}/output.txt`, '', (outputErr: Error) => {
+        if (outputErr) console.log(outputErr);
         // Create file for code with corresponding extension
         fs.writeFile(
           `${folder}/source.${lang.extension}`,
           data.code,
-          (codeError: Error) => {
-            if (codeError) throw codeError;
+          (codeErr: Error) => {
+            if (codeErr) console.log(codeErr);
             callback();
           }
         );
@@ -50,66 +55,49 @@ function createDirectory(
  *
  * @param {RunnableCode} data
  */
-function runCode(data: RunnableCode): void {
-  checkInput(data);
-  const language = languageNameFromAlias(data.lang);
-  if (!language) throw new Error('Supply a language field.');
+function runCode(data: RunnableCode, callback: Function): void {
+  const errors: Array<String> = checkInput(data);
+  if (errors.length > 0) console.log(errors);
+  else {
+    // Assign uuid to the submission
+    data.uuid = v4();
 
-  // Create a directory for the submission where the code can be compiled and runned
-  createDirectory(data, language, () => {
-    // Prepare the command for the python executer program (with console args)
-    const args = `./temp/${data.uuid}/source.${language.extension} ${language.name} ${language.timeout} ${language.compiled} ${language.compileCmd} ${language.runCmd} ${language.runFile} ${language.outputFile}`;
-    const command = `python execute.py ${args}`;
+    const language: Language | undefined = languageNameFromAlias(data.lang);
+    if (language) {
+      // Create a directory for the submission where the code can be compiled and runned
+      createDirectory(data, language, () => {
+        // Prepare the command for the python executer program (with console args)
+        const args: string = `./temp/${data.uuid}/source.${language.extension} ${language.name} ${language.timeout} ${language.compiled} ${language.compileCmd} ${language.runCmd} ${language.runFile} ${language.outputFile}`;
+        const command: string = `python execute.py ${args}`;
 
-    // Execute the python script, which compiles/runs the code
-    exec(command, (err: Error, stdout: string, stderr: string) => {
-      if (err) throw err;
+        // Execute the python script, which compiles/runs the code
+        exec(command, (execErr: Error, stdout: string, stderr: string) => {
+          if (execErr) console.log(execErr);
 
-      // Read the output, the program generated and save it
-      fs.readFile(
-        `./temp/${data.uuid}/output.txt`,
-        'utf8',
-        (readError: Error, content: string) => {
-          if (readError) throw readError;
-          const result = {
-            output: content,
-            stderr,
-            status: stdout,
-            submission_id: data.uuid
-          };
-          console.log(result);
-        }
-      );
+          // Read the output, the program generated and save it
+          fs.readFile(
+            `./temp/${data.uuid}/output.txt`,
+            'utf8',
+            (readErr: Error, content: string) => {
+              if (readErr) console.log(readErr);
+              const result: Output = {
+                output: content,
+                stderr,
+                status: stdout,
+                submissionID: data.uuid ? data.uuid : 0
+              };
+              callback(result);
+            }
+          );
 
-      // Save delete the temp directory for the submission
-      rimraf(`./temp/${data.uuid}`, (deleteErr: Error) => {
-        if (deleteErr) throw deleteErr;
+          // Save delete the temp directory for the submission
+          rimraf(`./temp/${data.uuid}`, (delErr: Error) => {
+            if (delErr) console.log(delErr);
+          });
+        });
       });
-    });
-  });
-}
-
-runCode({
-  lang: 'py3',
-  code: `name = input()\nprint("Hello %s!" % name)\n`,
-  stdin: 'Strivia',
-  args: [],
-  uuid: v4()
-});
-
-runCode({
-  lang: 'java',
-  code: `
-  import java.util.Scanner;
-  class Main {
-    public static void main(String[] args) {
-      Scanner scanner = new Scanner(System.in);
-      System.out.println("Hello " + scanner.next() + "!");
     }
-  }`,
-  stdin: 'Strivia',
-  args: [],
-  uuid: v4()
-});
+  }
+}
 
 export default runCode;

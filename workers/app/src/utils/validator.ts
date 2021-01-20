@@ -5,29 +5,32 @@ import { languageNameFromAlias } from './languages';
  * Checks if the give data is valid to compile.
  *
  * @param {RunnableCode} data
+ * @return {*}  {Array<String>}
  */
-function checkInput(data: RunnableCode): void {
+function checkInput(data: RunnableCode): Array<String> {
+  const errors: Array<String> = [];
   const { lang, code, stdin, args } = data;
 
   // Check language attribute
-  if (!lang) throw new Error('Supply a language field');
+  if (!lang) errors.push('Supply a language field');
   if (typeof lang !== 'string')
-    throw new Error('Supplied language is not a string');
+    errors.push('Supplied language is not a string');
   if (!languageNameFromAlias(lang))
-    throw new Error('Supplied language is not supported by Strivia');
+    errors.push('Supplied language is not supported by Strivia');
 
   // Check code attribute
-  if (!code) throw new Error('Supply a code field');
-  if (typeof code !== 'string')
-    throw new Error('Supplied code is not a string');
+  if (!code) errors.push('Supply a code field');
+  if (typeof code !== 'string') errors.push('Supplied code is not a string');
 
-  // Check stdin attribute
+  // Check stdin attribute (optional)
   if (typeof stdin !== 'string' && stdin)
-    throw new Array('Supplied stdin is not a string');
+    errors.push('Supplied stdin is not a string');
 
-  // Check args attribute
+  // Check args attribute (optional)
   if (typeof args !== 'object' && args)
-    throw new Error('Supplied args is not an array');
+    errors.push('Supplied args is not an array');
+
+  return errors;
 }
 
 export default checkInput;
