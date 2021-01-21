@@ -19,4 +19,4 @@ jobs:
           name: "Run all tests and collect Coverage Reports"
           command: npm run circleCoverage
       - store_artifacts:
-          path: coverage
+          path: ./workers/app/coverage
