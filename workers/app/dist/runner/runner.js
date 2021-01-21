@@ -3,15 +3,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const validator_1 = __importDefault(require("./utils/validator"));
-const languages_1 = require("./utils/languages");
-const { v4 } = require('uuid');
+const validator_1 = __importDefault(require("../utils/validator"));
+const languages_1 = require("../utils/languages");
 const { exec } = require('child_process');
 const fs = require('fs');
 const rimraf = require('rimraf');
 let tempPath = '../temp/';
-if (process.env.NODE_ENV === 'test')
-    tempPath = './temp';
+if (process.env.NODE_ENV === 'test' || process.env.NODE_ENV === 'circle')
+    tempPath = './temp/';
 function createDirectory(data, lang, callback) {
     const folder = `${tempPath}${data.uuid}`;
     fs.mkdir(folder, (folderErr) => {
@@ -37,7 +36,6 @@ function runCode(data, callback) {
     if (errors.length > 0)
         console.log(errors);
     else {
-        data.uuid = v4();
         const language = languages_1.languageNameFromAlias(data.lang);
         if (language) {
             createDirectory(data, language, () => {
@@ -57,7 +55,6 @@ function runCode(data, callback) {
                             status: stdout,
                             submissionID: data.uuid ? data.uuid : 0
                         };
-                        console.log(result);
                         callback(result);
                     });
                     rimraf(`${tempPath}${data.uuid}`, (delErr) => {
@@ -69,19 +66,4 @@ function runCode(data, callback) {
         }
     }
 }
-runCode({
-    lang: 'java',
-    code: `
-    import java.util.Scanner;
-    class Main {
-      public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Hello " + scanner.next() + "!");
-      }
-    }`,
-    stdin: 'Strivia',
-    args: []
-}, (data) => {
-    console.log(data);
-});
 exports.default = runCode;

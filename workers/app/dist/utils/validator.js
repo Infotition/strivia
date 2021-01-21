@@ -8,9 +8,9 @@ function checkInput(data) {
         errors.push('Supply a language field');
     if (typeof lang !== 'string')
         errors.push('Supplied language is not a string');
-    if (!languages_1.languageNameFromAlias(lang))
+    if (!languages_1.languageNameFromAlias(data.lang))
         errors.push('Supplied language is not supported by Strivia');
-    if (!code)
+    if (!data.code)
         errors.push('Supply a code field');
     if (typeof code !== 'string')
         errors.push('Supplied code is not a string');

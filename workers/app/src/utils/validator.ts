@@ -1,5 +1,10 @@
+//* ------------------- DEPENDENCIES ------------------ *\\
+
+//* Function imports
 import RunnableCode from '../models/RunnableCode';
 import { languageNameFromAlias } from './languages';
+
+//* ---------------- VALIDATION UTILITIES --------------- *\\
 
 /**
  * Checks if the give data is valid to compile.

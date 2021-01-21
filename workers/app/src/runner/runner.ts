@@ -1,24 +1,29 @@
 /* istanbul ignore file */
 
-// Function imports
-import checkInput from './utils/validator';
-import { languageNameFromAlias } from './utils/languages';
+//* ------------------- DEPENDENCIES ------------------ *\\
 
-// Models imports
-import Language from './models/Language';
-import RunnableCode from './models/RunnableCode';
-import Output from './models/Output';
+//* Function imports
+import checkInput from '../utils/validator';
+import { languageNameFromAlias } from '../utils/languages';
 
-// Modules imports
-const { v4 } = require('uuid');
+//* Models imports
+import Language from '../models/Language';
+import RunnableCode from '../models/RunnableCode';
+import Output from '../models/Output';
+
+//* Modules imports
 const { exec } = require('child_process');
 const fs = require('fs');
 const rimraf = require('rimraf');
 
+//* ------------------ CONFIGURATION ------------------ *\\
+
+//* Constants
 let tempPath = '../temp/';
-/* istanbul ignore next */
 if (process.env.NODE_ENV === 'test' || process.env.NODE_ENV === 'circle')
   tempPath = './temp/';
+
+//* ---------------------- RUNNER --------------------- *\\
 
 /**
  * Creates a temporary directory for the request with input and code file to run.
@@ -36,22 +41,18 @@ function createDirectory(
 
   //* Create folder for request
   fs.mkdir(folder, (folderErr: Error) => {
-    /* istanbul ignore next */
     if (folderErr) console.log(folderErr);
     //* Create file for input
     fs.writeFile(`${folder}/input.txt`, data.stdin, (inputErr: Error) => {
-      /* istanbul ignore next */
       if (inputErr) console.log(inputErr);
       //* Create file for the code output
       fs.writeFile(`${folder}/output.txt`, '', (outputErr: Error) => {
-        /* istanbul ignore next */
         if (outputErr) console.log(outputErr);
         //* Create file for code with corresponding extension
         fs.writeFile(
           `${folder}/source.${lang.extension}`,
           data.code,
           (codeErr: Error) => {
-            /* istanbul ignore next */
             if (codeErr) console.log(codeErr);
             callback();
           }
@@ -65,15 +66,12 @@ function createDirectory(
  * Runs the given Code, if the syntax is complete and the language is supported by Strivia.
  *
  * @param {RunnableCode} data
+ * @param {Function} callback
  */
 function runCode(data: RunnableCode, callback: Function): void {
   const errors: Array<String> = checkInput(data);
-  /* istanbul ignore next */
   if (errors.length > 0) console.log(errors);
   else {
-    //* Assign uuid to the submission
-    data.uuid = v4();
-
     const language: Language | undefined = languageNameFromAlias(data.lang);
     if (language) {
       //* Create a directory for the submission where the code can be compiled and runned
@@ -82,13 +80,11 @@ function runCode(data: RunnableCode, callback: Function): void {
         const args: string = `./temp/${data.uuid}/source.${language.extension} ${language.name} ${language.timeout} ${language.compiled} ${language.compileCmd} ${language.runCmd} ${language.runFile} ${language.outputFile}`;
         let command: string = `cd ..&&python execute.py ${args}`;
 
-        /* istanbul ignore next */
         if (process.env.NODE_ENV === 'test')
           command = `python execute.py ${args}`;
 
         //* Execute the python script, which compiles/runs the code
         exec(command, (execErr: Error, stdout: string, stderr: string) => {
-          /* istanbul ignore next */
           if (execErr) console.log(execErr);
 
           //* Read the output, the program generated and save it
@@ -96,7 +92,6 @@ function runCode(data: RunnableCode, callback: Function): void {
             `${tempPath}${data.uuid}/output.txt`,
             'utf8',
             (readErr: Error, content: string) => {
-              /* istanbul ignore next */
               if (readErr) console.log(readErr);
               const result: Output = {
                 output: content,
@@ -110,7 +105,6 @@ function runCode(data: RunnableCode, callback: Function): void {
 
           //* Save delete the temp directory for the submission
           rimraf(`${tempPath}${data.uuid}`, (delErr: Error) => {
-            /* istanbul ignore next */
             if (delErr) console.log(delErr);
           });
         });

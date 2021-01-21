@@ -19,7 +19,7 @@ def runner(testin, testout, run_cmd):
     """Runs the given compiled/skripted program."""
 
     #* Run the program with the command and input and outputs
-    # result = os.system('timeout %s %s < %s > %s' % (timeout, cmd, testin, testout))
+    # result = os.system('timeout %s %s < %s > %s' % (5, run_cmd, testin, testout))
     result = os.system('%s < %s > %s' % (run_cmd, testin, testout))
 
     if result == 0:

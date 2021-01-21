@@ -1,5 +1,11 @@
+//* ------------------- DEPENDENCIES ------------------ *\\
+
+//* Function imports
 import Language from '../models/Language';
 
+//* ------------------ CONFIGURATION ------------------ *\\
+
+//* Constants
 const languages: Language[] = [
   {
     name: 'python3',
@@ -24,6 +30,8 @@ const languages: Language[] = [
     outputFile: 'main.class'
   }
 ];
+
+//* ---------------- LANGUAGE UTILITIES --------------- *\\
 
 /**
  * Returns the name of the language found with the given alias.
