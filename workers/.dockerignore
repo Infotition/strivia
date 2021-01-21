@@ -1,0 +1,9 @@
+# Dependencies
+Dockerfile
+app/node_modules
+app/dist
+
+# Testing, Coverage
+app/coverage
+app/tests
+app/jest.config.js

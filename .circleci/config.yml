@@ -12,9 +12,6 @@ jobs:
           name: "Install global node modules"
           command: npm install
       - run:
-          name: "Install workers node modules"
-          command: cd ./workers/app/ ; npm install
-      - run:
           name: "Run all tests in circle environment"
           command: npm run circleTest
       - run:
