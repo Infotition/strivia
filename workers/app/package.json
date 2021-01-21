@@ -5,10 +5,10 @@
   "main": "app.js",
   "scripts": {
     "start": "set NODE_ENV=prod&& tsc&& cd ./dist&& node app.js",
-    "devStart": "tsc&&node ./src/dist/app.js",
-    "parse": "tsc --listFiles",
+    "devStart": "set NODE_ENV=dev&& tsc&& cd ./dist&& node app.js",
+    "parse": "tsc",
     "test": "set NODE_ENV=test&& jest",
-    "coverage": "jest --coverage"
+    "coverage": "set NODE_ENV=test&& jest --coverage"
   },
   "repository": {
     "type": "git",
