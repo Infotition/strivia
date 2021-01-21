@@ -4,11 +4,11 @@
   "description": "Strivia is a remote sandbox code execution engine for evaluation of untrusted code.",
   "main": "app.js",
   "scripts": {
-    "start": "tsc&&cd ./src/dist&& node app.js",
+    "start": "set NODE_ENV=prod&& tsc&& cd ./dist&& node app.js",
     "devStart": "tsc&&node ./src/dist/app.js",
     "parse": "tsc --listFiles",
-    "test": "jest --passWithNoTests --detectOpenHandles",
-    "coverage": "jest --coverage --passWithNoTests"
+    "test": "set NODE_ENV=test&& jest",
+    "coverage": "jest --coverage"
   },
   "repository": {
     "type": "git",

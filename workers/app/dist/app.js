@@ -6,11 +6,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const validator_1 = __importDefault(require("./utils/validator"));
 const languages_1 = require("./utils/languages");
 const { v4 } = require('uuid');
-const fs = require('fs');
 const { exec } = require('child_process');
+const fs = require('fs');
 const rimraf = require('rimraf');
+let tempPath = '../temp/';
+if (process.env.NODE_ENV === 'test')
+    tempPath = './temp';
 function createDirectory(data, lang, callback) {
-    const folder = `./temp/${data.uuid}`;
+    const folder = `${tempPath}${data.uuid}`;
     fs.mkdir(folder, (folderErr) => {
         if (folderErr)
             console.log(folderErr);
@@ -29,31 +32,35 @@ function createDirectory(data, lang, callback) {
         });
     });
 }
-function runCode(data) {
+function runCode(data, callback) {
     const errors = validator_1.default(data);
     if (errors.length > 0)
         console.log(errors);
     else {
+        data.uuid = v4();
         const language = languages_1.languageNameFromAlias(data.lang);
         if (language) {
             createDirectory(data, language, () => {
                 const args = `./temp/${data.uuid}/source.${language.extension} ${language.name} ${language.timeout} ${language.compiled} ${language.compileCmd} ${language.runCmd} ${language.runFile} ${language.outputFile}`;
-                const command = `python execute.py ${args}`;
+                let command = `cd ..&&python execute.py ${args}`;
+                if (process.env.NODE_ENV === 'test')
+                    command = `python execute.py ${args}`;
                 exec(command, (execErr, stdout, stderr) => {
                     if (execErr)
                         console.log(execErr);
-                    fs.readFile(`./temp/${data.uuid}/output.txt`, 'utf8', (readErr, content) => {
+                    fs.readFile(`${tempPath}${data.uuid}/output.txt`, 'utf8', (readErr, content) => {
                         if (readErr)
                             console.log(readErr);
                         const result = {
                             output: content,
                             stderr,
                             status: stdout,
-                            submission_id: data.uuid
+                            submissionID: data.uuid ? data.uuid : 0
                         };
                         console.log(result);
+                        callback(result);
                     });
-                    rimraf(`./temp/${data.uuid}`, (delErr) => {
+                    rimraf(`${tempPath}${data.uuid}`, (delErr) => {
                         if (delErr)
                             console.log(delErr);
                     });
@@ -63,24 +70,18 @@ function runCode(data) {
     }
 }
 runCode({
-    lang: 'py3',
-    code: `name = input()\nprint("Hello %s!" % name)\n`,
-    stdin: 'Strivia',
-    args: [],
-    uuid: v4()
-});
-runCode({
     lang: 'java',
     code: `
-  import java.util.Scanner;
-  class Main {
-    public static void main(String[] args) {
-      Scanner scanner = new Scanner(System.in);
-      System.out.println("Hello " + scanner.next() + "!");
-    }
-  }`,
+    import java.util.Scanner;
+    class Main {
+      public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Hello " + scanner.next() + "!");
+      }
+    }`,
     stdin: 'Strivia',
-    args: [],
-    uuid: v4()
+    args: []
+}, (data) => {
+    console.log(data);
 });
 exports.default = runCode;

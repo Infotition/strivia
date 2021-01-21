@@ -1,7 +1,7 @@
 import runCode from '../src/app';
 import Output from '../src/models/Output';
 
-test('should run the given code and return the correct output', () => {
+function testPython(callback: Function) {
   runCode(
     {
       lang: 'py3',
@@ -10,10 +10,12 @@ test('should run the given code and return the correct output', () => {
       args: []
     },
     (result: Output) => {
-      expect(result.output).toBe('Hello Strivia!\r\n');
+      callback(result.output);
     }
   );
+}
 
+function testJava(callback: Function) {
   runCode(
     {
       lang: 'java',
@@ -29,7 +31,27 @@ test('should run the given code and return the correct output', () => {
       args: []
     },
     (result: Output) => {
-      expect(result.output).toBe('Hello Strivia!\r\n');
+      callback(result.output);
     }
   );
+}
+
+const amountTests = 2;
+let counter = 0;
+
+function isDone(done: Function) {
+  counter += 1;
+  if (counter === amountTests) done();
+}
+
+test('should run the given code and return the correct output', (done) => {
+  testPython((pythonResult: string) => {
+    expect(pythonResult).toBe('Hello Strivia!\r\n');
+    isDone(done);
+  });
+
+  testJava((javaResult: string) => {
+    expect(javaResult).toBe('Hello Strivia!\r\n');
+    isDone(done);
+  });
 });
