@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "preinstall": "cd ./workers/app/&& npm install",
-    "test": "cd ./workers/app/&& npm test",
-    "coverage": "cd ./workers/app/&& npm run coverage"
+    "test": "cd ./workers/app/&& npm run circle",
+    "coverage": "cd ./workers/app/&& npm run circleCoverage"
   },
   "repository": {
     "type": "git",

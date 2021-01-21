@@ -8,7 +8,9 @@
     "devStart": "set NODE_ENV=dev&& tsc&& cd ./dist&& node app.js",
     "parse": "tsc",
     "test": "set NODE_ENV=test&& jest",
-    "coverage": "set NODE_ENV=test&& jest --coverage"
+    "circle": "set NODE_ENV=circle&& jest",
+    "coverage": "set NODE_ENV=test&& jest --coverage",
+    "circleCoverage": "set NODE_ENV=circle&& jest --coverage"
   },
   "repository": {
     "type": "git",

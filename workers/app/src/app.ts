@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 // Function imports
 import checkInput from './utils/validator';
 import { languageNameFromAlias } from './utils/languages';
@@ -15,7 +17,8 @@ const rimraf = require('rimraf');
 
 let tempPath = '../temp/';
 /* istanbul ignore next */
-if (process.env.NODE_ENV === 'test') tempPath = './temp/';
+if (process.env.NODE_ENV === 'test' || process.env.NODE_ENV === 'circle')
+  tempPath = './temp/';
 
 /**
  * Creates a temporary directory for the request with input and code file to run.
