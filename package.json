@@ -4,8 +4,10 @@
   "description": "Strivia is a remote sandbox code execution engine for evaluation of untrusted code.",
   "main": "index.js",
   "scripts": {
-    "test": "cd ./workers/app/&& npm run circle",
-    "coverage": "cd ./workers/app/&& npm run circleCoverage"
+    "test": "cd ./workers/app/&& npm test",
+    "coverage": "cd ./workers/app/&& npm run coverage",
+    "circleTest": "cd ./workers/app/&& npm run circle",
+    "circleCoverage": "cd ./workers/app/&& npm run circleCoverage"
   },
   "repository": {
     "type": "git",

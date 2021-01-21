@@ -6,6 +6,20 @@ jobs:
 
     steps:
       - checkout
-      - run: npm install
-      - run: cd ./workers/app/ ; npm install
-      - run: npm test
+      - run:
+          name: "Install global node modules"
+          command: npm install
+      - run:
+          name: "Install workers node modules"
+          command: cd ./workers/app/ ; npm install
+      - run:
+          name: "Run all tests in circle environment"
+          command: npm run circleTest
+      - run:
+          name: "Run all tests and collect Coverage Reports"
+          command: npm run circleCoverage
+      - store_artifacts:
+          path: coverage
+      -codecov/upload:
+          file: coverage/coverage-final.json
+          token: cbe280ae6c4844a083a8c65388f13fb1

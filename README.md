@@ -7,15 +7,18 @@
   <p>Strivia is a remote sandbox code execution engine for evaluation of untrusted code.</p>
   <br>
   <p>
+    <a href="https://app.circleci.com/pipelines/github/Infotition"><img src="https://circleci.com/gh/Infotition/strivia.svg?style=shield" alt="build status" /></a>
+    <a href="https://frontend.code-inspector.com/public/project/17967/Strivia/dashboard" title="code grade"><img src="https://www.code-inspector.com/project/17967/status/svg"/></a>
+    <br>
     <a href="https://david-dm.org/Infotition/strivia" title="dependencies status"><img src="https://status.david-dm.org/gh/Infotition/strivia.svg"/></a>
     <a href="https://david-dm.org/Infotition/strivia?type=dev" title="devDependencies status"><img src="https://status.david-dm.org/gh/Infotition/strivia.svg?type=dev"/></a>
-    <a href="https://frontend.code-inspector.com/project/17967/dashboard" title="code grade"><img src="https://www.code-inspector.com/project/17967/status/svg"/></a>
     <br>
     <a href="https://github.com/Infotition/infotition-discord-bot/blob/main/LICENSE"><img src="https://img.shields.io/github/license/Infotition/infotition-discord-bot" alt="Discord server" /></a> 
     <a href="https://discord.gg/NpxrDGYDwV"><img src="https://img.shields.io/discord/792139920260464670?color=7289da&logo=discord&logoColor=white" alt="Discord server" /></a>
   </p>
   <br>
 </div>
+
 
 # About
 # Getting Started
