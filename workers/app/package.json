@@ -9,8 +9,8 @@
     "parse": "tsc",
     "test": "cross-env NODE_ENV=test&& jest",
     "coverage": "cross-env NODE_ENV=test&& jest --coverage",
-    "circle": "cross-env NODE_ENV=circle&& jest",
-    "circleCoverage": "cross-env NODE_ENV=circle&& jest --coverage"
+    "circle": "cross-env NODE_ENV=circle jest",
+    "circleCoverage": "cross-env NODE_ENV=circle jest --coverage"
   },
   "repository": {
     "type": "git",
