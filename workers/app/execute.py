@@ -3,7 +3,6 @@ import os
 
 def compiler(file, compile_cmd, output_file):
     """Compiles the given program and checks, if the compillation was succesfull."""
-
     #* Check if the given code path exists
     if os.path.isfile(file):
         #* Compile the code with the given command
@@ -17,14 +16,15 @@ def compiler(file, compile_cmd, output_file):
 
 def runner(testin, testout, run_cmd):
     """Runs the given compiled/skripted program."""
-
     #* Run the program with the command and input and outputs
-    # result = os.system('timeout %s %s < %s > %s' % (5, run_cmd, testin, testout))
-    result = os.system('%s < %s > %s' % (run_cmd, testin, testout))
+    result = os.system('timeout -s KILL %s %s < %s |head -c 500 > %s' % ('3s', run_cmd, testin, testout))
+    # result = os.system('%s < %s > %s' % (run_cmd, testin, testout))
+
+    print(result)
 
     if result == 0:
         return 200
-    if result == 31744:
+    if result == 31744 or result == 32:
         return 408
     return 400
 

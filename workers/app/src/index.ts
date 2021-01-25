@@ -2,18 +2,18 @@
 
 //* Function imports
 import runCode from './runner/runner';
+import RunnableCode from '../src/models/RunnableCode';
 
 //* Modules imports
 const amqp = require('amqp-connection-manager');
 const redis = require('redis');
-const { v4 } = require('uuid');
 
 //* ------------------ CONFIGURATION ------------------ *\\
 
 //* Constants
 const QUEUE_NAME = 'strivia';
-const redisConnection = { host: 'localhost', port: 6379 };
-const amqpConnection = { host: 'localhost', port: 5672 };
+const redisConnection = { host: 'redis-server', port: 6379 };
+const amqpConnection = { host: 'rabbitmq', port: 5672 };
 const pendingMsg = '{"status": "Processing"}';
 
 //* ---------------- SUBMISSION HANDLER --------------- *\\
@@ -46,17 +46,18 @@ if (process.env.NODE_ENV !== 'test' && process.env.NODE_ENV !== 'circle') {
       return Promise.all([
         channel.assertQueue(QUEUE_NAME, { durable: true }),
         channel.prefetch(1),
-        channel.consume(QUEUE_NAME, (data: any) => {
+        channel.consume(QUEUE_NAME, async (data: any) => {
           //* Create unique id and set a pending message in database
-          data.uuid = v4();
-          dbClient.setex(data.uuid?.toString(), 600, pendingMsg);
+          const code: RunnableCode = JSON.parse(data.content.toString());
+          dbClient.setex(code.uuid?.toString(), 600, pendingMsg);
 
           //* Run the code, save it in database and send ack to amqp server
-          runCode(JSON.parse(data.content.toString()), (result: string) => {
+          runCode(code, (result: any) => {
             console.log(result);
-            dbClient.setex(data.uuid?.toString(), 600, JSON.stringify(result));
-            channelWrapper.ack(data);
+            dbClient.setex(code.uuid?.toString(), 600, JSON.stringify(result));
+            // channelWrapper.ack(data);
           });
+          channelWrapper.ack(data);
         })
       ]);
     }

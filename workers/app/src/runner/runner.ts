@@ -32,11 +32,11 @@ if (process.env.NODE_ENV === 'test' || process.env.NODE_ENV === 'circle')
  * @param {(Language)} lang
  * @param {Function} callback
  */
-function createDirectory(
+async function createDirectory(
   data: RunnableCode,
   lang: Language,
   callback: Function
-): void {
+): Promise<void> {
   const folder: string = `${tempPath}${data.uuid}`;
 
   //* Create folder for request
@@ -68,7 +68,7 @@ function createDirectory(
  * @param {RunnableCode} data
  * @param {Function} callback
  */
-function runCode(data: RunnableCode, callback: Function): void {
+async function runCode(data: RunnableCode, callback: Function): Promise<void> {
   const errors: Array<String> = checkInput(data);
   if (errors.length > 0) console.log(errors);
   else {
@@ -78,10 +78,10 @@ function runCode(data: RunnableCode, callback: Function): void {
       createDirectory(data, language, () => {
         //* Prepare the command for the python executer program (with console args)
         const args: string = `./temp/${data.uuid}/source.${language.extension} ${language.name} ${language.timeout} ${language.compiled} ${language.compileCmd} ${language.runCmd} ${language.runFile} ${language.outputFile}`;
-        let command: string = `cd ..&&python execute.py ${args}`;
+        let command: string = `cd ..&&python3 execute.py ${args}`;
 
         if (process.env.NODE_ENV === 'test')
-          command = `python execute.py ${args}`;
+          command = `python3 execute.py ${args}`;
 
         //* Execute the python script, which compiles/runs the code
         exec(command, (execErr: Error, stdout: string, stderr: string) => {

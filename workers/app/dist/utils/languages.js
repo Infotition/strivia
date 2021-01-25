@@ -10,7 +10,7 @@ const languages = [
         compiled: false,
         compileCmd: '-',
         runFile: 'source.py',
-        runCmd: 'python',
+        runCmd: 'python3',
         outputFile: 'source.py'
     },
     {
@@ -22,7 +22,7 @@ const languages = [
         compileCmd: 'javac',
         runFile: 'Main',
         runCmd: 'java',
-        outputFile: 'main.class'
+        outputFile: 'Main.class'
     }
 ];
 exports.languages = languages;

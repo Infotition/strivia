@@ -2,11 +2,22 @@ version: '3.7'
 services:
     rabbitmq:
         image: 'rabbitmq'
-        ports:
-          - 5672:5672
+        # ports:
+            # - 5672:5672
         restart: always
     redis-server:
         image: 'redis'
-        ports:
-          - 6379:6379
+        # ports:
+            # - 6379:6379
         restart: always
+    worker:
+        build: ./workers
+        restart: always
+        pids_limit: 60
+        cpus: 2
+        mem_limit: 150M
+    backend:
+      build: ./backend
+      restart: always
+      ports:
+          - 7000:7000
